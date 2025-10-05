@@ -27,6 +27,7 @@ router.post('/signup', async (req, res) => {
     const payload = {
       user: {
         id: newUser.rows[0].id,
+        name: newUser.rows[0].name,
         is_admin: newUser.rows[0].is_admin,
       },
     };
@@ -65,6 +66,7 @@ router.post('/login', async (req, res) => {
     const payload = {
       user: {
         id: user.rows[0].id,
+        name: user.rows[0].name,
         is_admin: user.rows[0].is_admin,
       },
     };
