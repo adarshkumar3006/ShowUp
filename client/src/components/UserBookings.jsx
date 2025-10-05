@@ -8,6 +8,10 @@ const UserBookings = ({ onBookingChange }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [bookingToCancel, setBookingToCancel] = useState(null);
 
+  // New popup states
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
   useEffect(() => {
     const fetchBookings = async () => {
       if (!user || !token) return;
@@ -18,8 +22,11 @@ const UserBookings = ({ onBookingChange }) => {
         });
         setBookings(res.data);
       } catch (err) {
-        console.error(err.response.data);
-        alert(err.response.data.message || "Failed to fetch bookings");
+        console.error(err.response?.data || err);
+        setPopupMessage(
+          err.response?.data?.message || "Failed to fetch bookings"
+        );
+        setShowPopup(true);
       }
     };
 
@@ -40,15 +47,23 @@ const UserBookings = ({ onBookingChange }) => {
       );
       setShowConfirm(false);
       setBookingToCancel(null);
-      alert("Booking cancelled successfully!");
+
+      // Show success popup
+      setPopupMessage("Booking cancelled successfully!");
+      setShowPopup(true);
+
       if (onBookingChange) onBookingChange();
       const res = await axios.get("http://localhost:3001/api/bookings/user", {
         headers: { "x-auth-token": token },
       });
       setBookings(res.data);
     } catch (err) {
-      console.error(err.response.data);
-      alert(err.response.data.message || "Failed to cancel booking");
+      console.error(err.response?.data || err);
+      setPopupMessage(
+        err.response?.data?.message || "Failed to cancel booking"
+      );
+      setShowPopup(true);
+
       setShowConfirm(false);
       setBookingToCancel(null);
     }
@@ -88,12 +103,15 @@ const UserBookings = ({ onBookingChange }) => {
                 Booking ID: {booking.id}
               </p>
               {booking.status !== "cancelled" && (
-                <button
-                  onClick={() => confirmCancelBooking(booking.id)}
-                  className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
-                >
-                  Cancel Booking
-                </button>
+                <div className="flex justify-center mt-3">
+                  <button
+                    onClick={() => confirmCancelBooking(booking.id)}
+                    type="button"
+                    className="w-full max-w-[180px] bg-red-400 hover:bg-red-500 text-white font-bold py-2 px-4 rounded transition-colors duration-300"
+                  >
+                    Cancel Booking
+                  </button>
+                </div>
               )}
             </div>
           ))}
@@ -121,6 +139,21 @@ const UserBookings = ({ onBookingChange }) => {
                 No, Keep Booking
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success/Error Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white border-2 border-gray-300 rounded-lg shadow-lg p-6 w-80 text-center">
+            <p className="text-gray-800 font-medium mb-4">{popupMessage}</p>
+            <button
+              onClick={() => setShowPopup(false)}
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded transition-colors duration-300"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

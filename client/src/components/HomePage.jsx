@@ -7,8 +7,10 @@ const HomePage = () => {
     <div className="min-h-screen bg-gray-100">
       <div className="relative bg-gradient-to-r from-purple-600 to-blue-600 h-96 flex items-center justify-center text-white">
         <div className="text-center">
-          <h1 className="text-5xl font-bold mb-4">Welcome to Show Up</h1>
-          <p className="text-xl">Skip the Queue, Catch the Show!</p>
+          <h1 className="text-5xl font-bold mb-4">Welcome to ShowUP</h1>
+          <p className="text-xl">
+            Skip the Line, Book Your Movie Tickets Online!
+          </p>
         </div>
       </div>
 
