@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
   const navigate = useNavigate();
   const { login } = useUser();
@@ -20,12 +20,15 @@ const Signup = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:3001/api/auth/signup', formData);
+      const res = await axios.post(
+        "http://localhost:3001/api/auth/signup",
+        formData
+      );
       login(res.data.token);
-      navigate('/');
+      navigate("/");
     } catch (err) {
       console.error(err.response.data);
-      alert(err.response.data.message || 'Signup failed');
+      alert(err.response.data.message || "Signup failed");
     }
   };
 
@@ -66,7 +69,10 @@ const Signup = () => {
             className="w-full px-3 py-2 border rounded"
           />
         </div>
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 rounded"
+        >
           Signup
         </button>
       </form>

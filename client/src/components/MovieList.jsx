@@ -4,11 +4,18 @@ import axios from "axios";
 
 const MovieList = () => {
   const [movies, setMovies] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        const res = await axios.get("http://localhost:3001/api/movies");
+        // If there is a search query, include it as a query param
+        const url = searchQuery
+          ? `http://localhost:3001/api/movies?search=${encodeURIComponent(
+              searchQuery
+            )}`
+          : "http://localhost:3001/api/movies";
+        const res = await axios.get(url);
         setMovies(res.data);
       } catch (err) {
         console.error(err.message);
@@ -16,11 +23,23 @@ const MovieList = () => {
     };
 
     fetchMovies();
-  }, []);
+  }, [searchQuery]);
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Now Showing</h1>
+      <h1 className="text-3xl font-bold mb-4 text-gray-800">Now Showing</h1>
+
+      {/* Search Bar */}
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search movies..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {movies.map((movie) => (
           <Link
@@ -30,7 +49,12 @@ const MovieList = () => {
           >
             <div className="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 group-hover:scale-105 group-hover:shadow-xl">
               <img
-                src={movie.poster_url}
+                src={
+                  movie.poster_url ||
+                  `https://via.placeholder.com/300x450?text=${encodeURIComponent(
+                    movie.title
+                  )}`
+                }
                 alt={movie.title}
                 className="w-full h-48 object-cover rounded-lg"
               />

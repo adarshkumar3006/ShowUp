@@ -125,13 +125,26 @@ const SeatSelection = () => {
           </div>
         ))}
       </div>
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <h2 className="text-2xl">Selected Seats: {selectedSeats.join(", ")}</h2>
         <button
           onClick={handleBooking}
           className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
         >
-          Book Now
+          Pay
+        </button>
+      </div> */}
+      <div className="mt-6 flex flex-col items-center justify-center">
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Selected Seats:{" "}
+          {selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}
+        </h2>
+        <button
+          onClick={handleBooking}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded mt-4 transition duration-300"
+          disabled={selectedSeats.length === 0}
+        >
+          Pay
         </button>
       </div>
     </div>
