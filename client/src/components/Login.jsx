@@ -32,7 +32,7 @@ const Auth = () => {
           "http://localhost:3001/api/auth/signup",
           formData
         );
-        login(res.data.token); // auto-login after signup
+        login(res.data.token);
       }
       navigate("/");
     } catch (err) {

@@ -28,6 +28,9 @@ const SeatSelection = () => {
   const { user, token } = useUser();
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [bookedSeats, setBookedSeats] = useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [requiresAuth, setRequiresAuth] = useState(false);
 
   useEffect(() => {
     const fetchBookedSeats = async () => {
@@ -40,58 +43,58 @@ const SeatSelection = () => {
         console.error(err.message);
       }
     };
-
     fetchBookedSeats();
   }, [show_id]);
 
   const handleSelectSeat = (seatNumber) => {
-    setSelectedSeats((prevSelectedSeats) => {
-      if (prevSelectedSeats.includes(seatNumber)) {
-        return prevSelectedSeats.filter((seat) => seat !== seatNumber);
+    setSelectedSeats((prev) => {
+      if (prev.includes(seatNumber)) {
+        return prev.filter((seat) => seat !== seatNumber);
       } else {
-        if (prevSelectedSeats.length < MAX_SEATS) {
-          return [...prevSelectedSeats, seatNumber];
-        } else {
-          alert(`You can select a maximum of ${MAX_SEATS} seats.`);
-          return prevSelectedSeats;
-        }
+        if (prev.length < MAX_SEATS) return [...prev, seatNumber];
+        setPopupMessage(`You can select a maximum of ${MAX_SEATS} seats.`);
+        setShowPopup(true);
+        return prev;
       }
     });
   };
 
   const handleBooking = async () => {
     if (!user) {
-      alert("Please login to book seats.");
-      navigate("/login");
+      setPopupMessage("You need to login or signup to book seats.");
+      setRequiresAuth(true);
+      setShowPopup(true);
       return;
     }
 
     if (selectedSeats.length === 0) {
-      alert("Please select at least one seat.");
+      setPopupMessage("Please select at least one seat.");
+      setRequiresAuth(false);
+      setShowPopup(true);
       return;
     }
 
     try {
-      const res = await axios.post(
+      await axios.post(
         "http://localhost:3001/api/bookings",
         { user_id: user.id, show_id, seats: selectedSeats },
-        {
-          headers: {
-            "x-auth-token": token,
-          },
-        }
+        { headers: { "x-auth-token": token } }
       );
-      console.log(res.data);
-      alert("Booking successful!");
-      // After successful booking, re-fetch booked seats to update the UI
+
+      setPopupMessage("Your booking is confirmed!");
+      setRequiresAuth(false);
+      setShowPopup(true);
+
       const updatedBookedSeats = await axios.get(
         `http://localhost:3001/api/bookings/${show_id}/seats`
       );
       setBookedSeats(updatedBookedSeats.data);
       setSelectedSeats([]);
     } catch (err) {
-      console.error(err.response.data);
-      alert(err.response.data.message || "Booking failed");
+      console.error(err.response?.data);
+      setPopupMessage(err.response?.data?.message || "Booking failed");
+      setRequiresAuth(false);
+      setShowPopup(true);
     }
   };
 
@@ -99,7 +102,7 @@ const SeatSelection = () => {
   const cols = 10;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 relative">
       <h1 className="text-3xl font-bold mb-4">Select Your Seats</h1>
       <div className="bg-gray-800 text-white p-2 text-center mb-4 rounded">
         Screen
@@ -125,28 +128,56 @@ const SeatSelection = () => {
           </div>
         ))}
       </div>
-      {/* <div className="mt-4">
-        <h2 className="text-2xl">Selected Seats: {selectedSeats.join(", ")}</h2>
-        <button
-          onClick={handleBooking}
-          className="bg-blue-500 text-white py-2 px-4 rounded mt-4"
-        >
-          Pay
-        </button>
-      </div> */}
+
       <div className="mt-6 flex flex-col items-center justify-center">
         <h2 className="text-2xl font-semibold text-gray-800">
           Selected Seats:{" "}
-          {selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}
+          <span className="font-bold text-blue-600">
+            {selectedSeats.length > 0 ? selectedSeats.join(", ") : "None"}
+          </span>
         </h2>
         <button
           onClick={handleBooking}
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded mt-4 transition duration-300"
+          className={`bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded mt-4 transition duration-300 ${
+            selectedSeats.length === 0 ? "opacity-50 cursor-not-allowed" : ""
+          }`}
           disabled={selectedSeats.length === 0}
         >
           Pay
         </button>
       </div>
+
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white border-2 border-gray-300 rounded-lg shadow-lg p-6 w-96 text-center">
+            <p className="mb-6 text-gray-800 font-medium">{popupMessage}</p>
+
+            {requiresAuth ? (
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded transition-colors duration-300"
+                >
+                  Login
+                </button>
+                <button
+                  onClick={() => navigate("/signup")}
+                  className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded transition-colors duration-300"
+                >
+                  Signup
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={() => setShowPopup(false)}
+                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-6 rounded transition-colors duration-300"
+              >
+                OK
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

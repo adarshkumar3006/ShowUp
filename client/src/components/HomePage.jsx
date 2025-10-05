@@ -12,7 +12,6 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Movie List Section */}
       <div className="container mx-auto py-8">
         <MovieList />
       </div>

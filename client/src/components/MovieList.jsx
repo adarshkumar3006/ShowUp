@@ -9,7 +9,6 @@ const MovieList = () => {
   useEffect(() => {
     const fetchMovies = async () => {
       try {
-        // If there is a search query, include it as a query param
         const url = searchQuery
           ? `http://localhost:3001/api/movies?search=${encodeURIComponent(
               searchQuery

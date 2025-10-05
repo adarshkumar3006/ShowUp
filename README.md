@@ -1,37 +1,36 @@
-
-# Movie Booking Application
+# ShowUP Movie Booking Application
 
 This is a full-stack movie booking application built with the MERN stack (React, Node.js, Express, and PostgreSQL).
 
 ## Features
 
-*   User authentication (signup and login).
-*   Browse a list of movies.
-*   View movie details.
-*   View showtimes for a specific movie and date.
-*   Select seats from a seat map.
-*   Book seats.
+- User authentication (signup and login).
+- Browse a list of movies.
+- View movie details.
+- View showtimes for a specific movie and date.
+- Select seats from a seat map.
+- Book seats.
 
 ## Tech Stack
 
-*   **Frontend:** React, Vite, Tailwind CSS, React Router.
-*   **Backend:** Node.js, Express, PostgreSQL, JWT for authentication.
+- **Frontend:** React, Vite, Tailwind CSS, React Router.
+- **Backend:** Node.js, Express, PostgreSQL, JWT for authentication.
 
 ## Database Schema
 
-*   **users**: `id`, `name`, `email`, `password`
-*   **cinemas**: `id`, `name`, `location`
-*   **screens**: `id`, `cinema_id`, `name`
-*   **movies**: `id`, `title`, `description`, `duration`
-*   **shows**: `id`, `movie_id`, `screen_id`, `start_time`
-*   **bookings**: `id`, `user_id`, `show_id`, `seats` (JSON), `status`
+- **users**: `id`, `name`, `email`, `password`
+- **cinemas**: `id`, `name`, `location`
+- **screens**: `id`, `cinema_id`, `name`
+- **movies**: `id`, `title`, `description`, `duration`
+- **shows**: `id`, `movie_id`, `screen_id`, `start_time`
+- **bookings**: `id`, `user_id`, `show_id`, `seats` (JSON), `status`
 
 ## How to Run
 
 ### Prerequisites
 
-*   Node.js
-*   PostgreSQL
+- Node.js
+- PostgreSQL
 
 ### Backend
 
