@@ -59,10 +59,6 @@ This is a full-stack movie booking application built with the MERN stack (React,
     ```bash
     npm run db:setup
     ```
-6.  Seed the database with sample data:
-    ```bash
-    npm run db:seed
-    ```
 7.  Start the backend server:
     ```bash
     node index.js
