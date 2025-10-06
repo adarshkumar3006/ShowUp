@@ -77,10 +77,6 @@ Monitor bookings and availability.
     ```bash
     npm run db:setup
     ```
-6.  Seed the database with sample data:
-    ```bash
-    npm run db:seed
-    ```
 7.  Start the backend server:
     ```bash
     node index.js
