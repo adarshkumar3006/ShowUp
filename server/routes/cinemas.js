@@ -3,7 +3,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// Get all cinemas
 router.get('/', async (req, res) => {
   try {
     const allCinemas = await pool.query('SELECT * FROM cinemas');

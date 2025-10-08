@@ -77,7 +77,7 @@ Monitor bookings and availability.
     ```bash
     npm run db:setup
     ```
-7.  Start the backend server:
+6.  Start the backend server:
     ```bash
     node index.js
     ```
